@@ -2,7 +2,7 @@ module.exports  = (sequelize, DataTypes) => {
   const AppSetting = sequelize.define('AppSetting', {
     key : {
       type: DataTypes.STRING(191),
-      primarykey: true
+      primaryKey: true
     },
     value : {
       type: DataTypes.STRING(191),
