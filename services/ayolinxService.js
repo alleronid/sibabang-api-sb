@@ -1,6 +1,7 @@
-const AyolinxEnums = require('../utils/ayolinxEnums');
+const ayolinxEnums = require('../enums/AyolinxEnums');
 const AppSetting = require('../models/appSetting');
 const crypto = require('crypto');
+const axios = require('axios');
 const fs = require('fs');
 
 class AyolinxService{
