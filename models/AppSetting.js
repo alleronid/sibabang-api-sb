@@ -1,19 +1,20 @@
-module.exports  = (sequelize, DataTypes) => {
+module.exports = (sequelize, DataTypes) => {
   const AppSetting = sequelize.define('AppSetting', {
-    key : {
+    key: {
       type: DataTypes.STRING(191),
-      primaryKey: true
+      primaryKey: true, // Huruf "P" besar
     },
-    value : {
+    value: {
       type: DataTypes.STRING(191),
     },
-    is_active : {
+    is_active: {
       type: DataTypes.TINYINT,
-      defaultValue: 1
+      defaultValue: 1,
     }
   }, {
-    tableName : "app_settings",
-  })
+    tableName: "app_settings",
+    timestamps: false, // Menghilangkan createdAt & updatedAt
+  });
 
-  return AppSetting
-}
+  return AppSetting;
+};
