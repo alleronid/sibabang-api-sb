@@ -1,8 +1,13 @@
 module.exports = (sequelize, DataTypes) => {
   const AppSetting = sequelize.define('AppSetting', {
+    id : {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true, // Huruf "P" besar
+    },
     key: {
       type: DataTypes.STRING(191),
-      primaryKey: true, // Huruf "P" besar
+    
     },
     value: {
       type: DataTypes.STRING(191),

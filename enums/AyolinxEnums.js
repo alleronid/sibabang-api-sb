@@ -1,45 +1,45 @@
 class AyolinxEnums {
   //links
-  static URL_PROD = 'https://openapi.ayolinx.id';
-  static URL_DEV = 'https://sandbox.ayolinx.id';
+  static get URL_PROD() { return 'https://openapi.ayolinx.id'; }
+  static get URL_DEV() { return 'https://sandbox.ayolinx.id'; }
 
   //channel
-  static QRIS = 'BNC_QRIS';
-  static EWALLET = 'EMONEY_DANA_SNAP';
-  static VABNI = 'VIRTUAL_ACCOUNT_BNI';
-  static VACIMB = 'VIRTUAL_ACCOUNT_CIMB';
-  static VAMANDIRI = 'VIRTUAL_ACCOUNT_MANDIRI';
+  static get QRIS() { return 'BNC_QRIS'; }
+  static get EWALLET() { return 'EMONEY_DANA_SNAP'; }
+  static get VABNI() { return 'VIRTUAL_ACCOUNT_BNI'; }
+  static get VACIMB() { return 'VIRTUAL_ACCOUNT_CIMB'; }
+  static get VAMANDIRI() { return 'VIRTUAL_ACCOUNT_MANDIRI'; }
 
   //partnerID
-  static BNI_SB = "98829172";
-  static BNI_PROD = "98828222";
-  static CIMB_SB = "2056";
-  static CIMB_PROD = "2056";
-  static MANDIRI_SB = "87319";
-  static MANDIRI_PROD = "87319";
+  static get BNI_SB() { return "98829172"; }
+  static get BNI_PROD() { return "98828222"; }
+  static get CIMB_SB() { return "2056"; }
+  static get CIMB_PROD() { return "2056"; }
+  static get MANDIRI_SB() { return "87319"; }
+  static get MANDIRI_PROD() { return "87319"; }
 
   //status code
-  static SUCCESS_CODE = '00';
-  static INITIATED_CODE = '01';
-  static PAYING_CODE = '02';
-  static PENDING_CODE = '03';
-  static REFUNDED_CODE = '04';
-  static CANCEL_CODE = '05';
-  static FAILED_CODE = '06';
-  static NOT_FOUND = '07';
+  static get SUCCESS_CODE() { return '00'; }
+  static get INITIATED_CODE() { return '01'; }
+  static get PAYING_CODE() { return '02'; }
+  static get PENDING_CODE() { return '03'; }
+  static get REFUNDED_CODE() { return '04'; }
+  static get CANCEL_CODE() { return '05'; }
+  static get FAILED_CODE() { return '06'; }
+  static get NOT_FOUND() { return '07'; }
 
   //response code
-  static SUCCESS_DANA = '2005400';
-  static SUCCESS_QRIS = '2004700';
-  static SUCCESS_VA_BNI = '2002700';
-  static SUCCESS_VA_MANDIRI = '2002700';
-  static UNAUTHORIZED = '581000001';
-  static SUCCESS_GET_TOKENVA = '2007300';
-  static SUCCESS_CALLBACKVA = '2002500';
-  static SUCCESS_CALLBACK = '2005600';
-  static ERR_AYOLINK_PAYMENT_BAD_REQ = 4007300;
-  static ERR_AYOLINK_TOKEN_NO_AUTH_ERROR = 4017300;
-  static ERR_AYOLINK_PAYMENT_INVALID_SIGN = 4012501;
+  static get SUCCESS_DANA() { return '2005400'; }
+  static get SUCCESS_QRIS() { return '2004700'; }
+  static get SUCCESS_VA_BNI() { return '2002700'; }
+  static get SUCCESS_VA_MANDIRI() { return '2002700'; }
+  static get UNAUTHORIZED() { return '581000001'; }
+  static get SUCCESS_GET_TOKENVA() { return '2007300'; }
+  static get SUCCESS_CALLBACKVA() { return '2002500'; }
+  static get SUCCESS_CALLBACK() { return '2005600'; }
+  static get ERR_AYOLINK_PAYMENT_BAD_REQ() { return 4007300; }
+  static get ERR_AYOLINK_TOKEN_NO_AUTH_ERROR() { return 4017300; }
+  static get ERR_AYOLINK_PAYMENT_INVALID_SIGN() { return 4012501; }
 }
 
 module.exports = AyolinxEnums;
