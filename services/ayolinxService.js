@@ -15,6 +15,7 @@ class AyolinxService {
         where: { key },
         attributes: ['value'] 
       });
+      console.log(setting);
       return setting ? setting.value : null;
     } catch (error) {
       console.error(`Error getting AppSetting value for key ${key}:`, error);
@@ -28,7 +29,7 @@ class AyolinxService {
       const requestTimestamp = this.timestamp;
       const stringToSign = `${clientKey}|${requestTimestamp}`;
 
-      const privateKey = fs.readFileSync('/path/to/private_key.pem');
+      const privateKey = fs.readFileSync('/home/alleroni/keys/private_key.pem');
 
       const sign = crypto.createSign('SHA256');
       sign.update(stringToSign);
