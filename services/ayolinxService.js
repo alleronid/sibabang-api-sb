@@ -13,7 +13,7 @@ class AyolinxService {
     try {
       const setting = await AppSetting.findOne({
         where: { key },
-        attributes: ['value']
+        attributes: ['value'] 
       });
       return setting ? setting.value : null;
     } catch (error) {
