@@ -37,7 +37,7 @@ func NewDBUtil(db *gorm.DB) *DBUtil {
 
 func (db *DBUtil) GetAppSetting(key string) string {
 	var setting AppSetting
-	db.db.Where("key = ?", key).First(&setting)
+	db.db.Where("`key` = ?", key).First(&setting)
 	return setting.Value
 }
 
@@ -85,7 +85,6 @@ func (a *AyolinxService) Signature() (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("failed to parse private key: %v", err)
 	}
-
 
 	hash := sha256.Sum256([]byte(stringToSign))
 	signature, err := rsa.SignPKCS1v15(rand.Reader, privateKey, crypto.SHA256, hash[:])
@@ -208,6 +207,7 @@ func (a *AyolinxService) BaseInterface(signature, timestamp, token, url string, 
 
 func (a *AyolinxService) GenerateQris(data map[string]interface{}) (string, error) {
 	timestamp := a.timestamp
+	fmt.Printf(timestamp)
 	method := "POST"
 	urlSignature := "/v1.0/qr/qr-mpm-generate"
 	token, err := a.GetToken()
@@ -276,22 +276,17 @@ func (a *AyolinxService) WalletDana(data map[string]interface{}) (string, error)
 }
 
 func (a *AyolinxService) RandomNumber() string {
-	// Generate a random integer between 11111111111 and 99999999999
 	max := new(big.Int).SetInt64(99999999999)
 	min := new(big.Int).SetInt64(11111111111)
 
-	// Calculate the range
 	diff := new(big.Int).Sub(max, min)
 	diff = diff.Add(diff, big.NewInt(1))
 
-	// Generate random number in range
 	n, err := rand.Int(rand.Reader, diff)
 	if err != nil {
-		// Fallback to simpler random method if crypto/rand fails
 		return fmt.Sprintf("%d", 11111111111+time.Now().UnixNano()%88888888889)
 	}
 
-	// Add min to get within range
 	n = n.Add(n, min)
 
 	return n.String()
