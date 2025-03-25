@@ -1,7 +1,6 @@
 package payment
 
 import (
-	"encoding/json"
 	"lanaya/api/app/ayolinx"
 )
 
@@ -31,30 +30,30 @@ func (s *servicePayment) SavePayment(input PaymentInput) (TrxPayment, error) {
 	transaction.MerchantId = input.Merchant.MerchantId
 	transaction.CompanyId = input.Merchant.CompanyId
 
-	qrisData := map[string]interface{}{
-		"trx_id":       input.TrxId,
-		"amount":       input.Amount,
-		"fullname":     input.Fullname,
-		"email":        input.Email,
-		"phone_number": input.PhoneNumber,
-	}
+	// qrisData := map[string]interface{}{
+	// 	"trx_id":       input.TrxId,
+	// 	"amount":       input.Amount,
+	// 	"fullname":     input.Fullname,
+	// 	"email":        input.Email,
+	// 	"phone_number": input.PhoneNumber,
+	// }
 
-	qrisResponse, err := s.ayolinxService.GenerateQris(qrisData)
-	if err != nil {
-		return transaction, err
-	}
+	// qrisResponse, err := s.ayolinxService.GenerateQris(qrisData)
+	// if err != nil {
+	// 	return transaction, err
+	// }
 
-	// Parse QRIS response
-	var qrisResult map[string]interface{}
-	if err := json.Unmarshal([]byte(qrisResponse), &qrisResult); err != nil {
-		return transaction, err
-	}
+	// // Parse QRIS response
+	// var qrisResult map[string]interface{}
+	// if err := json.Unmarshal([]byte(qrisResponse), &qrisResult); err != nil {
+	// 	return transaction, err
+	// }
 
-	if qrContent, ok := qrisResult["qrContent"].(string); ok {
-		transaction.PaymentCode = qrContent
-	}
+	// if qrContent, ok := qrisResult["qrContent"].(string); ok {
+	// 	transaction.PaymentCode = qrContent
+	// }
 
-	transaction.DataRaw = qrisResponse
+	// transaction.DataRaw = qrisResponse
 
 	newTransaction, err := s.repository.CreatePayment(transaction)
 	if err != nil {
