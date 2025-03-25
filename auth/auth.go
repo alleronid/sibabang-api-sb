@@ -13,6 +13,19 @@ import (
 func AuthMiddleware(authService Service, merchantService merchant.MerchantService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")
+		clientKey := c.GetHeader("x-api-key")
+
+		if clientKey == "" {
+			response := utils.APIResponse("Client key is required", http.StatusUnauthorized, "error", nil)
+			c.AbortWithStatusJSON(http.StatusUnauthorized, response)
+			return
+		}
+
+		if authHeader == "" {
+			response := utils.APIResponse("Token b2b is required", http.StatusUnauthorized, "error", nil)
+			c.AbortWithStatusJSON(http.StatusUnauthorized, response)
+			return
+		}
 
 		if !strings.Contains(authHeader, "Bearer") {
 			response := utils.APIResponse("Unauthorized", http.StatusUnauthorized, "error", nil)
@@ -51,6 +64,7 @@ func AuthMiddleware(authService Service, merchantService merchant.MerchantServic
 		}
 
 		merchantIDFloat, ok := claimMerchant["MerchantId"].(float64)
+
 		if !ok {
 			response := utils.APIResponse("Unauthorized", http.StatusUnauthorized, "error", nil)
 			c.AbortWithStatusJSON(http.StatusUnauthorized, response)
