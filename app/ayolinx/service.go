@@ -68,9 +68,9 @@ func (a *AyolinxService) Signature() (string, error) {
 	clientKey := a.secretSB
 	requestTimestamp := a.timestamp
 	stringToSign := clientKey + "|" + requestTimestamp
-
 	// Read private key
 	privateKeyBytes, err := ioutil.ReadFile("/home/alleroni/keys/private_key.pem")
+	
 	if err != nil {
 		return "", fmt.Errorf("failed to read private key: %v", err)
 	}
@@ -172,7 +172,7 @@ func (a *AyolinxService) API(url string, headers map[string]string, post interfa
 
 func (a *AyolinxService) BaseInterface(signature, timestamp, token, url string, post interface{}) (string, error) {
 	baseURL := a.enums.URL_DEV + url
-
+	fmt.Print(baseURL)
 	reqBody, err := json.Marshal(post)
 	if err != nil {
 		return "", err
@@ -207,7 +207,6 @@ func (a *AyolinxService) BaseInterface(signature, timestamp, token, url string, 
 
 func (a *AyolinxService) GenerateQris(data map[string]interface{}) (string, error) {
 	timestamp := a.timestamp
-	fmt.Printf(timestamp)
 	method := "POST"
 	urlSignature := "/v1.0/qr/qr-mpm-generate"
 	token, err := a.GetToken()
