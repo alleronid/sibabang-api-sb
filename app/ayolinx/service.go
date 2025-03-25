@@ -69,7 +69,7 @@ func (a *AyolinxService) Signature() (string, error) {
 	requestTimestamp := a.timestamp
 	stringToSign := clientKey + "|" + requestTimestamp
 	// Read private key
-	privateKeyBytes, err := ioutil.ReadFile("/home/work/tool/keys/private_key.pem")
+	privateKeyBytes, err := ioutil.ReadFile("var/keys/private_key.pem")
 
 	if err != nil {
 		return "", fmt.Errorf("failed to read private key: %v", err)
