@@ -12,10 +12,11 @@ import (
 	"encoding/json"
 	"encoding/pem"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"lanaya/api/config"
 	"math/big"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 
@@ -68,9 +69,9 @@ func (a *AyolinxService) Signature() (string, error) {
 	clientKey := a.secretSB
 	requestTimestamp := a.timestamp
 	stringToSign := clientKey + "|" + requestTimestamp
-	// Read private key
-	privateKeyBytes, err := ioutil.ReadFile("var/keys/private_key.pem")
 
+	// Read private key
+	privateKeyBytes, err := os.ReadFile("/var/keys/private_key.pem")
 	if err != nil {
 		return "", fmt.Errorf("failed to read private key: %v", err)
 	}
@@ -81,17 +82,24 @@ func (a *AyolinxService) Signature() (string, error) {
 		return "", fmt.Errorf("failed to parse PEM block containing private key")
 	}
 
-	privateKey, err := x509.ParsePKCS1PrivateKey(block.Bytes)
+	privateKey, err := x509.ParsePKCS8PrivateKey(block.Bytes)
 	if err != nil {
 		return "", fmt.Errorf("failed to parse private key: %v", err)
 	}
 
+	rsaPrivateKey, ok := privateKey.(*rsa.PrivateKey)
+	if !ok {
+		return "", fmt.Errorf("not an RSA private key")
+	}
+
+	// Sign the string
 	hash := sha256.Sum256([]byte(stringToSign))
-	signature, err := rsa.SignPKCS1v15(rand.Reader, privateKey, crypto.SHA256, hash[:])
+	signature, err := rsa.SignPKCS1v15(rand.Reader, rsaPrivateKey, crypto.SHA256, hash[:])
 	if err != nil {
 		return "", fmt.Errorf("failed to sign: %v", err)
 	}
 
+	// Encode signature to base64
 	base64Signature := base64.StdEncoding.EncodeToString(signature)
 	return base64Signature, nil
 }
@@ -162,7 +170,7 @@ func (a *AyolinxService) API(url string, headers map[string]string, post interfa
 	}
 	defer resp.Body.Close()
 
-	respBody, err := ioutil.ReadAll(resp.Body)
+	respBody, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return "", err
 	}
@@ -197,7 +205,7 @@ func (a *AyolinxService) BaseInterface(signature, timestamp, token, url string, 
 	defer resp.Body.Close()
 
 	// Read response
-	respBody, err := ioutil.ReadAll(resp.Body)
+	respBody, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return "", err
 	}
