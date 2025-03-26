@@ -2,6 +2,7 @@ package payment
 
 import (
 	"encoding/json"
+	"fmt"
 	"lanaya/api/app/ayolinx"
 )
 
@@ -32,11 +33,15 @@ func (s *servicePayment) SavePayment(input PaymentInput) (TrxPayment, error) {
 	transaction.CompanyId = input.Merchant.CompanyId
 
 	qrisData := map[string]interface{}{
-		"trx_id":       input.TrxId,
-		"amount":       input.Amount,
-		"fullname":     input.Fullname,
-		"email":        input.Email,
-		"phone_number": input.PhoneNumber,
+		"partnerReferenceNo": input.TrxId,
+		"amount": map[string]interface{}{
+			"currency": "IDR",
+			"value":    input.Amount,
+		},
+		"additionalInfo": map[string]interface{}{
+			"channel":       "BNC_QRIS",
+			"subMerchantId": input.Merchant.MidQris,
+		},
 	}
 
 	qrisResponse, err := s.ayolinxService.GenerateQris(qrisData)
@@ -44,10 +49,15 @@ func (s *servicePayment) SavePayment(input PaymentInput) (TrxPayment, error) {
 		return transaction, err
 	}
 
-	// Parse QRIS response
 	var qrisResult map[string]interface{}
 	if err := json.Unmarshal([]byte(qrisResponse), &qrisResult); err != nil {
 		return transaction, err
+	}
+
+	if responseCode, ok := qrisResult["responseCode"].(string); ok {
+		if responseCode != "2004700" {
+			return transaction, fmt.Errorf("QRIS generation failed: %s", qrisResult["responseMessage"])
+		}
 	}
 
 	if qrContent, ok := qrisResult["qrContent"].(string); ok {
