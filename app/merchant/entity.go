@@ -7,6 +7,9 @@ type Merchant struct {
 	ApiKeySb     string
 	CbKeySb      string
 	Token        string
+	NmidQris     string
+	MidQris      string
+	MidDana      string
 	CompanyId    int
 }
 
