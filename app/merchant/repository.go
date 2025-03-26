@@ -9,6 +9,7 @@ import (
 type Repository interface {
 	GetMerchant(clientKey string, token string) (Merchant, error)
 	FindByID(merchantID int) (Merchant, error)
+	FindByClientKey(clientKey string) (Merchant, error)
 }
 
 type repository struct {
@@ -37,6 +38,18 @@ func (r *repository) FindByID(merchantID int) (Merchant, error) {
 	var merchant Merchant
 
 	err := r.db.Where("merchant_id =?", merchantID).First(&merchant).Error
+
+	if err != nil {
+		return merchant, err
+	}
+
+	return merchant, nil
+}
+
+func (r *repository) FindByClientKey(clientKey string) (Merchant, error) {
+	var merchant Merchant
+
+	err := r.db.Where("api_key_sb = ?", clientKey).First(&merchant).Error
 
 	if err != nil {
 		return merchant, err

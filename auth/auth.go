@@ -21,6 +21,14 @@ func AuthMiddleware(authService Service, merchantService merchant.MerchantServic
 			return
 		}
 
+		_, err := merchantService.GetMerchantByClientKey(clientKey)
+
+		if err != nil {
+			response := utils.APIResponse("Client key is unauthorized", http.StatusUnauthorized, "error", nil)
+			c.AbortWithStatusJSON(http.StatusUnauthorized, response)
+			return
+		}
+
 		if authHeader == "" {
 			response := utils.APIResponse("Token b2b is required", http.StatusUnauthorized, "error", nil)
 			c.AbortWithStatusJSON(http.StatusUnauthorized, response)
