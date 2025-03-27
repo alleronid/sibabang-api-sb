@@ -36,6 +36,20 @@ func (h *paymentHandler) GenerateTransaction(c *gin.Context) {
 	currentMerchant := c.MustGet("currentMerchant").(merchant.Merchant)
 	input.Merchant = currentMerchant
 
+	cekPayment, err := h.paymentService.GetTransaction(input.TrxId)
+
+	if err != nil {
+		response := utils.APIResponse("Failed to create payment", http.StatusBadRequest, "error", nil)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	if cekPayment.TrxId == input.TrxId {
+		response := utils.APIResponse("Payment already exists", http.StatusConflict, "error", nil)
+		c.JSON(http.StatusConflict, response)
+		return
+	}
+
 	newPayment, err := h.paymentService.SavePayment(input)
 
 	if err != nil {
@@ -48,5 +62,4 @@ func (h *paymentHandler) GenerateTransaction(c *gin.Context) {
 	response := utils.APIResponse("Successfully create payment", http.StatusOK, "success", formatter)
 
 	c.JSON(http.StatusOK, response)
-
 }

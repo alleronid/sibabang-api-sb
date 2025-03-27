@@ -4,6 +4,7 @@ import "gorm.io/gorm"
 
 type Repository interface {
 	CreatePayment(trxPayment TrxPayment) (TrxPayment, error)
+	FindPayment(trxId string) (TrxPayment, error)
 }
 
 type repository struct {
@@ -22,4 +23,15 @@ func (r *repository) CreatePayment(trxPayment TrxPayment) (TrxPayment, error) {
 	}
 
 	return trxPayment, nil
+}
+
+func (r *repository) FindPayment(trxId string) (TrxPayment, error) {
+	var payment TrxPayment
+	err := r.db.Where("trx_id = ?", trxId).First(&payment).Error
+
+	if err != nil {
+		return payment, err
+	}
+
+	return payment, nil
 }

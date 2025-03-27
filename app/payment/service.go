@@ -8,6 +8,7 @@ import (
 
 type PaymentService interface {
 	SavePayment(input PaymentInput) (TrxPayment, error)
+	GetTransaction(trxId string) (TrxPayment, error)
 }
 
 type servicePayment struct {
@@ -72,4 +73,14 @@ func (s *servicePayment) SavePayment(input PaymentInput) (TrxPayment, error) {
 	}
 
 	return newTransaction, nil
+}
+
+func (s *servicePayment) GetTransaction(trxId string) (TrxPayment, error) {
+	payment, err := s.repository.FindPayment(trxId)
+
+	if err != nil {
+		return payment, err
+	}
+
+	return payment, nil
 }
