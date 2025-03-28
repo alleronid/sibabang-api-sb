@@ -1,0 +1,58 @@
+name: Deploy omnibayar API Go Application
+
+on:
+  push:
+    branches:
+      - main # Trigger deployment on pushes to the main branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: 1.20  # Adjust according to your Go version
+
+      - name: Install dependencies
+        run: go mod tidy
+
+      - name: Build the application
+        run: go build -o api .
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: api
+          path: ./api
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Download Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: api
+          path: ./api
+
+      - name: Deploy to Server
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            sudo systemctl stop sibabang-sb-api
+            sudo rm -f /home/${{ secrets.SSH_USER }}/api
+            mv app /home/${{ secrets.SSH_USER }}/api
+            sudo chmod +x /home/${{ secrets.SSH_USER }}/api
+            sudo systemctl start sibabang-sb-api
